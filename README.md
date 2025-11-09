@@ -1,2 +1,287 @@
-# PROYECTO-INTERDISCIPLINARIO-DE-ISAAC-ALVIA
-PROYECTO INTERDISCIPLINARIO BÁSICA SUPERIOR SOBRE COSTA RICA
+<!--
+Sitio web "Descubre Costa Rica" - un solo archivo HTML (SPA).
+Colores: tropicales (verde, azul, amarillo).
+Instrucciones: guarda este archivo como `index.html` y súbelo a GitHub Pages o Netlify.
+-->
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Descubre Costa Rica</title>
+  <meta name="description" content="Sitio educativo sobre Costa Rica: cultura, historia, geografía y recursos. Listo para presentar como actividad académica." />
+  <style>
+    /* Paleta tropical */
+    :root{
+      --verde: #2f9e44; /* verde selva */
+      --azul: #0ea5a4;  /* azul turquesa */
+      --amarillo: #f6c144; /* amarillo sol */
+      --fondo: #f7fbf9;
+      --texto: #073642;
+      --card: #ffffff;
+      --acento: #ff6b6b;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    body{font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; color:var(--texto); background:linear-gradient(180deg,var(--fondo), #ecfff9);}
+    header{backdrop-filter: blur(6px); background:linear-gradient(90deg, rgba(47,158,68,0.06), rgba(14,165,164,0.04)); position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(0,0,0,0.04)}
+    .container{max-width:1100px; margin:0 auto; padding:20px}
+    .nav{display:flex; gap:12px; align-items:center; justify-content:space-between}
+    .logo{display:flex; gap:12px; align-items:center}
+    .logo .mark{width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--verde),var(--azul)); display:flex; align-items:center; justify-content:center; color:white; font-weight:700}
+    nav a{padding:8px 12px; border-radius:10px; text-decoration:none; color:var(--texto); font-weight:600}
+    nav a.button{background:var(--verde); color:white; box-shadow:0 6px 18px rgba(47,158,68,0.18); transition:transform .18s ease;}
+    nav a:hover{transform:translateY(-3px)}
+    .hero{display:grid; grid-template-columns:1fr 420px; gap:28px; align-items:center; margin-top:26px}
+    .hero-card{background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.9)); border-radius:14px; padding:26px; box-shadow:0 10px 30px rgba(10,20,10,0.06)}
+    h1{margin:0 0 8px 0; font-size:28px}
+    p.lead{margin:0 0 16px 0; color: #115; line-height:1.5}
+    .cta{display:flex; gap:10px; margin-top:12px}
+    .btn{padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:700}
+    .btn.secondary{background:transparent; border:2px solid rgba(11, 83, 56, 0.08)}
+    .stats{display:flex; gap:12px; margin-top:16px}
+    .stat{background:var(--glass); padding:10px 12px; border-radius:10px}
+    /* cards grid */
+    .grid{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin-top:22px}
+    .card{background:var(--card); border-radius:12px; padding:16px; box-shadow:0 8px 20px rgba(11,38,25,0.04)}
+    .map-wrap{height:320px; border-radius:10px; overflow:hidden}
+
+    footer{margin-top:36px; padding:18px 0; text-align:center; color:rgba(7,54,66,0.6)}
+
+    /* Secciones internas (SPA) */
+    main section{display:none}
+    main section.active{display:block}
+    .section-title{display:flex; align-items:center; gap:12px}
+    .section-title h2{margin:0}
+    /* pequeño responsive */
+    @media (max-width:880px){ .hero{grid-template-columns:1fr; } .map-wrap{height:260px} nav{display:none} }
+
+    /* Animaciones */
+    .pulse{animation:pulse 3s infinite}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+    /* botones de nav móvil */
+    .mobile-nav{display:none}
+    @media (max-width:880px){ .mobile-nav{display:flex; gap:10px} }
+
+    /* estilo listado recursos */
+    .list{padding-left:16px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="logo">
+        <div class="mark">CR</div>
+        <div>
+          <div style="font-weight:800">Descubre Costa Rica</div>
+          <div style="font-size:12px; color:rgba(7,54,66,0.6)">Proyecto - Actividad Académica</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#" data-target="home" class="nav-link">Inicio</a>
+        <a href="#" data-target="desarrollo" class="nav-link">Desarrollo</a>
+        <a href="#" data-target="recursos" class="nav-link">Recursos</a>
+        <a href="#" id="shareBtn" class="button">Obtener link</a>
+      </nav>
+
+      <div class="mobile-nav">
+        <button class="btn" data-target="home">Inicio</button>
+        <button class="btn" data-target="desarrollo">Desarrollo</button>
+        <button class="btn" data-target="recursos">Recursos</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-card">
+        <h1>Bienvenidos a Costa Rica</h1>
+        <p class="lead">Costa Rica es un país de la región centroamericana famoso por su biodiversidad, sus playas y la filosofía de "Pura Vida". Este sitio presenta su cultura, historia y datos geográficos para tu actividad académica.</p>
+        <div class="cta">
+          <button class="btn" onclick="navigateTo('desarrollo')" style="background:linear-gradient(90deg,var(--azul),var(--verde)); color:white">Explorar Cultura</button>
+          <button class="btn secondary" onclick="navigateTo('recursos')">Ver Recursos</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><strong>Área:</strong> 51,100 km² (aprox.)</div>
+          <div class="stat"><strong>Población:</strong> ~5 millones</div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <strong>Sección destacada:</strong>
+            <p style="margin:8px 0 0 0">Gastronomía: Gallo pinto, casado, tamales. Exploramos sabores típicos y recetas.</p>
+          </div>
+
+          <div class="card">
+            <strong>Video corto</strong>
+            <div style="margin-top:8px">
+              <!-- YouTube embebido (sustituye el ID por otro si prefieres) -->
+              <iframe width="100%" height="180" src="https://www.youtube.com/embed/z3h0uWqG1XQ" title="YouTube video" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="card">
+            <strong>Audio típico</strong>
+            <p style="margin:8px 0 0 0">Escucha un ejemplo de música folclórica (usa controls para reproducir):</p>
+            <audio controls style="width:100%; margin-top:8px">
+              <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+              Tu navegador no soporta audio.
+            </audio>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div>
+        <div class="hero-card map-card">
+          <h3 style="margin-top:0">Mapa interactivo</h3>
+          <div class="map-wrap">
+            <!-- OpenStreetMap embed para Costa Rica (centro aproximado) -->
+            <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-86.731%2C8.024%2C-82.546%2C11.217&amp;layer=mapnik&amp;marker=9.611%2C-84.087" style="border:0"></iframe>
+          </div>
+          <p style="font-size:12px; color:rgba(7,54,66,0.6); margin-top:10px">Puedes hacer zoom y desplazarte. (Fuente: OpenStreetMap)</p>
+        </div>
+      </div>
+    </div>
+
+    <main style="margin-top:22px">
+      <!-- Inicio (home) -->
+      <section id="home" class="active">
+        <div class="section-title">
+          <h2>Portada del viaje</h2>
+        </div>
+        <div style="margin-top:12px; display:grid; grid-template-columns:1fr 320px; gap:18px">
+          <div>
+            <p>Esta es la portada de tu proyecto: combina fotografías, un mapa interactivo, audio y video para presentar Costa Rica en una forma dinámica para la audiencia académica. Usa los botones para navegar entre secciones.</p>
+            <ul>
+              <li>Incluye una sección destacada de gastronomía, historia y religión.</li>
+              <li>Interactividad: mapa embebido, video de YouTube y audio.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <strong>Consejo para presentar</strong>
+            <p style="margin-top:8px">Al presentar, abre el sitio en pantalla completa y usa el mapa para mostrar regiones mientras comentas geografía y ecosistemas.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Desarrollo -->
+      <section id="desarrollo">
+        <div class="section-title">
+          <h2>Desarrollo — Cultura, Historia y Geografía</h2>
+        </div>
+
+        <div style="margin-top:12px" class="grid">
+          <div class="card">
+            <h3>Gastronomía</h3>
+            <p>Platos representativos:</p>
+            <ul>
+              <li><strong>Gallo pinto:</strong> mezcla de arroz y frijoles, desayuno tradicional.</li>
+              <li><strong>Casado:</strong> plato del almuerzo con arroz, frijoles, proteína y plátano.</li>
+              <li><strong>Olla de carne:</strong> sopa tradicional con verduras y carne.</li>
+            </ul>
+            <p>Recomendación: incluye imágenes de los platos si las tienes para enriquecer la presentación.</p>
+          </div>
+
+          <div class="card">
+            <h3>Música y Vestimenta</h3>
+            <p>La música tradicional incluye marimba en algunas zonas y estilos folclóricos. La vestimenta típica varía según festividades y regiones rurales; para presentaciones, usa imágenes de trajes regionales.</p>
+          </div>
+
+          <div class="card">
+            <h3>Historia — Puntos relevantes</h3>
+            <ul>
+              <li>Independencia: 15 de septiembre de 1821 (misma fecha que varios países centroamericanos).</li>
+              <li>Desarrollo del ecoturismo: desde finales del siglo XX Costa Rica ha sido referente en conservación.</li>
+              <li>Política: destacada estabilidad democrática en la región.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Geografía y Biodiversidad</h3>
+            <p>Costa Rica posee montañas, volcanes (como el Arenal), bosques tropicales y costas en el Pacífico y el Caribe. Es uno de los países con mayor biodiversidad por km².</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recursos -->
+      <section id="recursos">
+        <div class="section-title">
+          <h2>Recursos y Fuentes</h2>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="card">
+            <h3>Fuentes bibliográficas y enlaces recomendados</h3>
+            <ol class="list">
+              <li>Enciclopedias y artículos académicos sobre Costa Rica.</li>
+              <li>Sitios oficiales de turismo y conservación para estadísticas actuales.</li>
+              <li>Documentales y videos sobre biodiversidad y cultura.</li>
+            </ol>
+            <p style="font-size:13px; color:rgba(7,54,66,0.7)">(Sustituye esta lista por URLs y referencias concretas que tu profesor pida.)</p>
+          </div>
+
+          <div class="card">
+            <h3>Datos curiosos</h3>
+            <ul>
+              <li>Es conocido por su lema "Pura Vida" —expresión de agradecimiento y buena onda.</li>
+              <li>Alrededor del 25% del territorio está protegido como parques nacionales o reservas.</li>
+              <li>No tiene ejército desde 1948; los fondos se destinan a educación y salud.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      Proyecto creado para actividad académica — Descubre Costa Rica • 2025
+    </footer>
+  </div>
+
+  <script>
+    // SPA navigation
+    function showSection(id){
+      document.querySelectorAll('main section').forEach(s=> s.classList.remove('active'))
+      const el = document.getElementById(id)
+      if(el) el.classList.add('active')
+      window.scrollTo({top:0, behavior:'smooth'})
+    }
+    function navigateTo(id){ showSection(id) }
+
+    // attach nav links
+    document.querySelectorAll('.nav-link, .mobile-nav .btn').forEach(el=>{
+      el.addEventListener('click', e=>{
+        e.preventDefault()
+        const t = el.dataset.target || el.getAttribute('data-target')
+        if(t) showSection(t)
+      })
+    })
+
+    // Share button guidance: opens instructions modal (simple) or copies the current URL
+    document.getElementById('shareBtn').addEventListener('click', function(e){
+      e.preventDefault();
+      // copy location.href if served; otherwise show instructions
+      try{
+        const url = location.href;
+        navigator.clipboard.writeText(url).then(()=>{
+          alert('Link copiado al portapapeles. Si estás en local, sube el archivo a Netlify o GitHub Pages y comparte el enlace publicado.')
+        }).catch(()=>{
+          alert('No se pudo copiar automáticamente. Guarda el archivo y súbelo a Netlify o GitHub Pages. Si quieres, te doy los pasos.')
+        })
+      }catch(err){
+        alert('Guarda el archivo y súbelo a Netlify o GitHub Pages. Si quieres, te doy los pasos.')
+      }
+    })
+
+    // Inicial: mantener home
+    showSection('home')
+  </script>
+</body>
+</html>
+
